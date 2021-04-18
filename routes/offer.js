@@ -71,13 +71,6 @@ router.post("/offer/publish", isAuthenticated, async(req, res) => {
             size,
             color,
         } = req.fields;
-        const newTab = [
-            { MARQUE: brand },
-            { TAILLE: size },
-            { ETAT: condition },
-            { COULEUR: color },
-            { EMPLACEMENT: city },
-        ];
         // console.log(req.user);
 
         if (req.fields || req.files) {
@@ -86,7 +79,13 @@ router.post("/offer/publish", isAuthenticated, async(req, res) => {
                 product_name: title,
                 product_description: description,
                 product_price: price,
-                product_details: newTab,
+                product_details: [
+                    { MARQUE: brand },
+                    { TAILLE: size },
+                    { ETAT: condition },
+                    { COULEUR: color },
+                    { EMPLACEMENT: city },
+                ],
                 owner: req.user,
             });
             // folder: `/vinted/offer/${offer._id}`,
@@ -194,7 +193,12 @@ router.put("/offer/update/:id", isAuthenticated, async(req, res) => {
 //Supprimer une annonce
 router.delete("/offer/delete/:id", isAuthenticated, async(req, res) => {
     try {
-        await Offer.findOneAndRemove(req.params.id);
+        // Je veux supprimer l'image correspondant à l'id de l'annonce
+        // await Offer.findOneAndRemove(req.params.id);
+        const id = await Offer.findById(req.params.id);
+        const cloudImgOffer = await cloudinary.api.delete_resources([id.product_image.public_id])
+        console.log(cloudImgOffer)
+        await id.delete();
         res.status(200).json({ message: "Offer Removed" });
     } catch (err) {
         res.status(400).json({ error: err.message });
@@ -204,15 +208,12 @@ router.delete("/offer/delete/:id", isAuthenticated, async(req, res) => {
 router.get("/offer/:id", isAuthenticated, async(req, res) => {
     try {
         //Id de l'offre
-        if (req.params.id) {
-            const offerId = await Offer.findById(req.params.id).populate(
-                "owner",
-                "account"
-            );
-            res.status(200).json(offerId);
-        } else {
-            res.status(400).json({ message: "Renseignez l'id de l'offre" });
-        }
+
+        const offerId = await Offer.findById(req.params.id).populate(
+            "owner",
+            "account"
+        );
+        !offerId ? res.status(400).json({ message: "Cet offre n'existe plus !" }) : res.status(200).json(offerId);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
