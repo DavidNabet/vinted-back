@@ -5,7 +5,7 @@ const Offer = mongoose.model("Offer", {
   product_description: {
     type: String,
     default: "",
-    minLength: 25,
+    minLength: 20,
     maxLength: 500,
   },
   product_price: { type: Number, max: 100000 },

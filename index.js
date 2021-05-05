@@ -9,7 +9,7 @@ const cloudinary = require("cloudinary").v2;
 app.use(formidable());
 app.use(cors());
 
-mongoose.connect(process.env.MONGO_LOCAL_URI, {
+mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false,
@@ -34,6 +34,6 @@ app.all("*", (req, res) => {
   res.status(404).json({ error: "Cette route n'existe pas." });
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Server Started");
 });
