@@ -202,7 +202,7 @@ router.delete("/offer/delete/:id", isAuthenticated, async (req, res) => {
   }
 });
 
-router.get("/offer/:id", isAuthenticated, async (req, res) => {
+router.get("/offer/:id", async (req, res) => {
   try {
     //Id de l'offre
     const offerId = await Offer.findById(req.params.id).populate(
