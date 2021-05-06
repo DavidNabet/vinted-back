@@ -19,21 +19,27 @@ router.post("/signup", async (req, res) => {
         const hashPassword = SHA256(salt + password).toString(encBase64);
         //le token
         const token = uid2(64);
-        const result = await cloudinary.uploader.upload(req.files.avatar.path, {
-          folder: "vinted",
-        });
-
+        // Déclaration de l'utilisateur
         const user = new User({
           email,
           token: token,
           account: {
             username,
             phone,
-            avatar: result.secure_url,
           },
           hash: hashPassword,
           salt: salt,
         });
+
+        if (req.files.avatar) {
+          const avatar = await cloudinary.uploader.upload(
+            req.files.avatar.path,
+            {
+              folder: `/vinted/user/${user._id}`,
+            }
+          );
+          user.account.avatar = avatar;
+        }
 
         await user.save();
         res.status(200).json({
