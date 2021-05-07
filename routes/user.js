@@ -65,7 +65,7 @@ router.post("/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ error: "Invalid Credentials" });
+      return res.status(400).json({ message: "Invalid Credentials" });
     } else {
       const newHash = SHA256(user.salt + password).toString(encBase64);
       //   console.log(newHash);
