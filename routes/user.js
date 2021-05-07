@@ -52,7 +52,7 @@ router.post("/signup", async (req, res) => {
         return res.status(400).json({ error: "Incorrect credentials" });
       }
     } else {
-      return res.status(400).json({ error: "User already exists" });
+      return res.status(409).json({ error: "User already exists" });
     }
   } catch (err) {
     res.status(400).json({ error: err.message });
