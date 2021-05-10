@@ -74,7 +74,7 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
     } = req.fields;
     // console.log(req.user);
 
-    if (req.fields || req.files) {
+    if (req.fields && req.files) {
       let pictureToUpload = req.files.picture.path;
       const offer = new Offer({
         product_name: title,
@@ -89,9 +89,9 @@ router.post("/offer/publish", isAuthenticated, async (req, res) => {
         ],
         owner: req.user,
       });
-      // folder: `/vinted/offer/${offer._id}`,
+      // folder: "vinted",
       const result = await cloudinary.uploader.upload(pictureToUpload, {
-        folder: "vinted",
+        folder: `/vinted/offer/${offer._id}`,
       });
       offer.product_image = result;
       await offer.save();

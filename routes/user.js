@@ -25,7 +25,7 @@ router.post("/signup", async (req, res) => {
           token: token,
           account: {
             username,
-            phone,
+            phone: phone || null,
           },
           hash: hashPassword,
           salt: salt,
