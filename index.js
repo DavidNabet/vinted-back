@@ -9,12 +9,17 @@ const cloudinary = require("cloudinary").v2;
 app.use(formidable());
 app.use(cors());
 
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-  useCreateIndex: true,
-});
+mongoose.connect(
+  process.env.NODE_ENV === "development"
+    ? process.env.MONGO_LOCAL_URI
+    : process.env.MONGO_URI,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  }
+);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
@@ -25,6 +30,7 @@ cloudinary.config({
 // Importer les routes
 app.use("/user", require("./routes/user"));
 app.use(require("./routes/offer"));
+app.use(require("./routes/payment"));
 
 app.get("/", (req, res) => {
   res.json("Welcome to Vinted API !");
