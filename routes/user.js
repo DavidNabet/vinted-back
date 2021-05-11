@@ -12,7 +12,7 @@ router.post("/signup", async (req, res) => {
 
     let userExist = await User.findOne({ email });
     if (!userExist) {
-      if (username && password) {
+      if (username && password && email) {
         // le salt
         const salt = uid2(16);
         // le password hashé
@@ -38,6 +38,10 @@ router.post("/signup", async (req, res) => {
               folder: `/vinted/user/${user._id}`,
             }
           );
+          user.account.avatar = avatar;
+        } else {
+          const avatar =
+            "https://res.cloudinary.com/dkigh7ogm/image/upload/v1620310993/vinted/avatar-default_fj5qrk.png";
           user.account.avatar = avatar;
         }
 
