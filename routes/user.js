@@ -41,7 +41,7 @@ router.post("/signup", async (req, res) => {
           user.account.avatar = avatar;
         } else {
           const avatar =
-            "https://res.cloudinary.com/dkigh7ogm/image/upload/v1620310993/vinted/avatar-default_fj5qrk.png";
+            "https://res.cloudinary.com/dkigh7ogm/image/upload/v1620310993/vinted/stock/avatar-default_fj5qrk.png";
           user.account.avatar = avatar;
         }
 
